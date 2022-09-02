@@ -713,6 +713,8 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
   int right_curline_col = 0;
 
   LineDrawState draw_state = WL_START;  // what to draw next
+  VirtText virt_inline = KV_INITIAL_VALUE;
+  size_t virt_inline_i = 0;
 
   int match_conc      = 0;              ///< cchar for match functions
   bool on_last_col    = false;
@@ -1528,7 +1530,8 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
       n_extra = 0;
     }
 
-    if (draw_state == WL_LINE && (area_highlighting || has_spell)) {
+    int extmark_attr = 0;
+    if (draw_state == WL_LINE && (area_highlighting || has_spell || extra_check)) {
       // handle Visual or match highlighting in this line
       if (vcol == fromcol
           || (vcol + 1 == fromcol && n_extra == 0
@@ -1583,29 +1586,69 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
         }
       }
 
-      // Decide which of the highlight attributes to use.
-      attr_pri = true;
+      if (has_decor && v >= 0) {
+        bool selected = (area_active || (area_highlighting && noinvcur
+                                         && (colnr_T)vcol == wp->w_virtcol));
+        extmark_attr = decor_redraw_col(wp->w_buffer, (colnr_T)v, off,
+                                            selected, &decor_state);
 
-      if (area_attr != 0) {
-        char_attr = hl_combine_attr(line_attr, area_attr);
-        if (!highlight_match) {
-          // let search highlight show in Visual area if possible
-          char_attr = hl_combine_attr(search_attr, char_attr);
+        // we could already be inside an existing virt_line with multiple chunks
+        if (!(virt_inline_i < kv_size(virt_inline))) {
+          DecorState *state = &decor_state;
+          for (size_t i = 0; i < kv_size(state->active); i++) {
+            DecorRange *item = &kv_A(state->active, i);
+            if (!(item->start_row == state->row
+                  && kv_size(item->decor.virt_text)
+                  && item->decor.virt_text_pos == kVTInline)) {
+              continue;
+            }
+            if (item->win_col >= -1 && item->start_col <= v) {
+              virt_inline = item->decor.virt_text;
+              virt_inline_i = 0;
+              item->win_col = -2;
+              break;
+            }
+          }
         }
-      } else if (search_attr != 0) {
-        char_attr = hl_combine_attr(line_attr, search_attr);
-      } else if (line_attr != 0 && ((fromcol == -10 && tocol == MAXCOL)
-                                    || vcol < fromcol || vcol_prev < fromcol_prev
-                                    || vcol >= tocol)) {
-        // Use line_attr when not in the Visual or 'incsearch' area
-        // (area_attr may be 0 when "noinvcur" is set).
-        char_attr = line_attr;
-      } else {
-        attr_pri = false;
-        if (has_syntax) {
-          char_attr = syntax_attr;
+
+        if (n_extra <= 0 && virt_inline_i < kv_size(virt_inline)) {
+          VirtTextChunk vtc = kv_A(virt_inline, virt_inline_i);
+          p_extra = (char_u *)vtc.text;
+          n_extra = (int)strlen(p_extra);
+          c_extra = NUL;
+          c_final = NUL;
+          extra_attr = vtc.hl_id ? syn_id2attr(vtc.hl_id) : 0;
+          n_attr = n_extra;
+          extmark_attr = 0;
+          virt_inline_i++;
+        }
+      }
+
+
+      if (area_highlighting) {
+        // Decide which of the highlight attributes to use.
+        attr_pri = true;
+        if (area_attr != 0) {
+          char_attr = hl_combine_attr(line_attr, area_attr);
+          if (!highlight_match) {
+            // let search highlight show in Visual area if possible
+            char_attr = hl_combine_attr(search_attr, char_attr);
+          }
+        } else if (search_attr != 0) {
+          char_attr = hl_combine_attr(line_attr, search_attr);
+        } else if (line_attr != 0 && ((fromcol == -10 && tocol == MAXCOL)
+                                      || vcol < fromcol || vcol_prev < fromcol_prev
+                                      || vcol >= tocol)) {
+          // Use line_attr when not in the Visual or 'incsearch' area
+          // (area_attr may be 0 when "noinvcur" is set).
+          char_attr = line_attr;
         } else {
-          char_attr = 0;
+          attr_pri = false;
+          if (has_syntax) {
+            char_attr = syntax_attr;
+          } else {
+            char_attr = 0;
+          }
         }
       }
     }
@@ -1846,10 +1889,6 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
         }
 
         if (has_decor && v > 0) {
-          bool selected = (area_active || (area_highlighting && noinvcur
-                                           && (colnr_T)vcol == wp->w_virtcol));
-          int extmark_attr = decor_redraw_col(wp->w_buffer, (colnr_T)v - 1, off,
-                                              selected, &decor_state);
           if (extmark_attr != 0) {
             if (!attr_pri) {
               char_attr = hl_combine_attr(char_attr, extmark_attr);

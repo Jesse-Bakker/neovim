@@ -69,6 +69,14 @@ void bufhl_add_hl_pos_offset(buf_T *buf, int src_id, int hl_id, lpos_T pos_start
 
 void decor_redraw(buf_T *buf, int row1, int row2, Decoration *decor)
 {
+  if (decor && decor_virt_pos(*decor) && decor->virt_text_pos == kVTInline) {
+        FOR_ALL_WINDOWS_IN_TAB(wp, curtab) {
+            if (wp->w_cursor.lnum == row1 + 1) {
+                wp->w_valid &= ~(VALID_VIRTCOL | VALID_WROW | VALID_WCOL);
+            }
+        }
+    }
+
   if (row2 >= row1) {
     if (!decor
         || decor->hl_id
@@ -78,7 +86,6 @@ void decor_redraw(buf_T *buf, int row1, int row2, Decoration *decor)
       redraw_buf_range_later(buf, row1 + 1, row2 + 1);
     }
   }
-
   if (decor && decor_virt_pos(*decor)) {
     redraw_buf_line_later(buf, row1 + 1, false);
   }

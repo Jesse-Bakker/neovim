@@ -601,6 +601,7 @@ describe('extmark decorations', function()
       [25] = {background = Screen.colors.LightRed};
       [26] = {background=Screen.colors.DarkGrey, foreground=Screen.colors.LightGrey};
       [27] = {background = Screen.colors.Plum1};
+      [28] = {foreground = Screen.colors.SlateBlue};
     }
 
     ns = meths.create_namespace 'test'
@@ -1044,7 +1045,86 @@ end]]
     ]]}
 
   end)
+    it('can have virtual text of inline position', function()
+        insert(example_text)
+        feed '2G$'
+        screen:expect { grid = [[
+      for _,item in ipairs(items) do                    |
+          local text, hl_id_cell, count = unpack(item^)  |
+          if hl_id_cell ~= nil then                     |
+              hl_id = hl_id_cell                        |
+          end                                           |
+          for _ = 1, (count or 1) do                    |
+              local cell = line[colpos]                 |
+              cell.text = text                          |
+              cell.hl_id = hl_id                        |
+              colpos = colpos+1                         |
+          end                                           |
+      end                                               |
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
 
+        meths.buf_set_extmark(0, ns, 1, 14,
+            { virt_text = { { ': ', 'Special' }, { 'string', 'Type' } }, virt_text_pos = 'inline' })
+        screen:expect { grid = [[
+      for _,item in ipairs(items) do                    |
+          local text{28:: }{3:string}, hl_id_cell, count = unpack|
+      (item^)                                            |
+          if hl_id_cell ~= nil then                     |
+              hl_id = hl_id_cell                        |
+          end                                           |
+          for _ = 1, (count or 1) do                    |
+              local cell = line[colpos]                 |
+              cell.text = text                          |
+              cell.hl_id = hl_id                        |
+              colpos = colpos+1                         |
+          end                                           |
+      end                                               |
+      {1:~                                                 }|
+                                                        |
+    ]] }
+
+        feed 'gg0'
+        screen:try_resize(55, 15)
+        screen:expect { grid = [[
+      ^for _,item in ipairs(items) do                         |
+          local text{28:: }{3:string}, hl_id_cell, count = unpack(item|
+      )                                                      |
+          if hl_id_cell ~= nil then                          |
+              hl_id = hl_id_cell                             |
+          end                                                |
+          for _ = 1, (count or 1) do                         |
+              local cell = line[colpos]                      |
+              cell.text = text                               |
+              cell.hl_id = hl_id                             |
+              colpos = colpos+1                              |
+          end                                                |
+      end                                                    |
+      {1:~                                                      }|
+                                                             |
+    ]] }
+
+        screen:try_resize(56, 15)
+        screen:expect { grid = [[
+      ^for _,item in ipairs(items) do                          |
+          local text{28:: }{3:string}, hl_id_cell, count = unpack(item)|
+          if hl_id_cell ~= nil then                           |
+              hl_id = hl_id_cell                              |
+          end                                                 |
+          for _ = 1, (count or 1) do                          |
+              local cell = line[colpos]                       |
+              cell.text = text                                |
+              cell.hl_id = hl_id                              |
+              colpos = colpos+1                               |
+          end                                                 |
+      end                                                     |
+      {1:~                                                       }|
+      {1:~                                                       }|
+                                                              |
+    ]] }
+    end)
 end)
 
 describe('decorations: virtual lines', function()
