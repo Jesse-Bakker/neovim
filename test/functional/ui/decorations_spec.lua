@@ -1148,6 +1148,29 @@ end]]
                                                         |
     ]] }
     end)
+    it('positions the cursor before inline virtual text on an empty line', function ()
+        insert ""
+        meths.buf_set_extmark(0, ns, 0, 0,
+            { virt_text = { { 'empty line', 'Special' }, }, virt_text_pos = 'inline' })
+        feed '$'
+        screen:expect { grid = [[
+      {28:^empty line}                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+    end)
 end)
 
 describe('decorations: virtual lines', function()
