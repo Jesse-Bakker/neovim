@@ -1067,7 +1067,7 @@ end]]
     ]] }
 
         meths.buf_set_extmark(0, ns, 1, 14,
-            { virt_text = { { ': ', 'Special' }, { 'string', 'Type' } }, virt_text_pos = 'inline' })
+            { virt_text = { { ':\t', 'Special' }, { 'string', 'Type' } }, virt_text_pos = 'inline' })
         screen:expect { grid = [[
       for _,item in ipairs(items) do                    |
           local text{28:: }{3:string}, hl_id_cell, count = unpack|
