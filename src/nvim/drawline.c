@@ -611,7 +611,7 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
 
   char_u extra[57];                   // sign, line number and 'fdc' must
                                       // fit in here
-  int n_extra = 0;                    // number of extra chars
+  int n_extra = 0;                    // number of extra bytes
   char *p_extra = NULL;               // string of extra chars, plus NUL
   char *p_extra_free = NULL;          // p_extra needs to be freed
   int c_extra = NUL;                  // extra chars, all the same
@@ -1613,12 +1613,12 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
 
         if (n_extra <= 0 && virt_inline_i < kv_size(virt_inline)) {
           VirtTextChunk vtc = kv_A(virt_inline, virt_inline_i);
-          p_extra = (char_u *)vtc.text;
+          p_extra = vtc.text;
           n_extra = (int)strlen(p_extra);
           c_extra = NUL;
           c_final = NUL;
           extra_attr = vtc.hl_id ? syn_id2attr(vtc.hl_id) : 0;
-          n_attr = n_extra;
+          n_attr = mb_charlen((char_u *)p_extra);
           extmark_attr = 0;
           virt_inline_i++;
         }

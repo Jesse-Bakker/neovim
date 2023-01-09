@@ -1125,6 +1125,29 @@ end]]
                                                               |
     ]] }
     end)
+    it('handles virtual text with multibyte characters correctly', function()
+        insert "123456789"
+        meths.buf_set_extmark(0, ns, 0, 4,
+            { virt_text = { { 'söme和平téxt', 'Special' }, }, virt_text_pos = 'inline' })
+        feed 'gg0'
+        screen:expect { grid = [[
+      ^1234{28:söme和平téxt}56789                             |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+    end)
 end)
 
 describe('decorations: virtual lines', function()
