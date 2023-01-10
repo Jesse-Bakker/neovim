@@ -1,0 +1,485 @@
+commit 1aeb3eb092a384e63a407096102fd5a954aabeb8
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Jan 1 14:04:51 2023 +0000
+
+    patch 9.0.1124: virtual text at a column position is truncated
+    
+    Problem:    Virtual text at a column position is truncated at the window edge.
+                (Yegappan Lakshmanan)
+    Solution:   Do not truncated virtual text that is placed at a column.
+
+commit 4ce1f99a2d58b809ab5a5c602bd031426f8527e8
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Dec 19 13:31:06 2022 +0000
+
+    patch 9.0.1077: can add text property with negative ID before virtual text
+    
+    Problem:    Can add text property with negative ID before virtual text
+                property.
+    Solution:   Remember that a text property with a negative ID was used and give
+                an appropriate error message. (closes #11725)
+                Fix index computation.
+
+commit d097af77797f030e0f29f9bbc298358a5addb2a5
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Dec 17 11:33:00 2022 +0000
+
+    patch 9.0.1067: in diff mode virtual text is highlighted incorrectly
+    
+    Problem:    In diff mode virtual text is highlighted incorrectly. (Rick Howe)
+    Solution:   Do not use diff attributes for virtual text. (closes #11714)
+
+commit 56a40fea9c28f8fc918a0db6de4c048da241cf32
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Dec 6 14:17:57 2022 +0000
+
+    patch 9.0.1019: 'smoothscroll' and virtual text above don't work together
+    
+    Problem:    'smoothscroll' and virtual text above don't work together.
+                (Yee Cheng Chin)
+    Solution:   Skip virtual text above when w_skipcol is non-zero.
+                (closes #11665)
+
+commit 37f088eeade7972bce45b663adaba4bf102a9999
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Fri Dec 2 21:50:14 2022 +0000
+
+    patch 9.0.0995: padding before virtual text is highlighted
+    
+    Problem:    Padding before virtual text below is highlighted when 'number' and
+                'nowrap' are set.
+    Solution:   Save and restore n_attr_skip. (closes #11643)
+
+commit 45e4eead2aaf9d883bcf19db779be47ffb4fa44a
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Thu Dec 1 18:38:02 2022 +0000
+
+    patch 9.0.0982: 'cursorline' not drawn before virtual text below
+    
+    Problem:    'cursorline' not drawn before virtual text below.
+    Solution:   Add the 'cursorline' attribute to the empty space. (closes #11647)
+
+commit 7c02ad9f8906b576e53a62342c68ae557f67bacc
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Nov 29 21:37:13 2022 +0000
+
+    patch 9.0.0975: virtual text below empty line misplaced when 'number' set
+    
+    Problem:    Virtual text below an empty line is misplaced when 'number' is
+                set.
+    Solution:   Adjust the computations. (closes #11629)
+
+commit 38854b565acba39eff36cf3c6396c911bf072bdc
+Author: porygonisaduck <alvaradx@umich.edu>
+Date:   Sun Nov 27 20:55:05 2022 +0000
+
+    patch 9.0.0962: virtual text below cannot be placed below empty lines
+    
+    Problem:    Virtual text below cannot be placed below empty lines.
+    Solution:   Add one character. (James Alvarado, closes #11606, closes #11520)
+
+commit 6ac16f0c0fe923098b9df5ac430f1923045f16ea
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Thu Nov 24 22:42:29 2022 +0000
+
+    patch 9.0.0944: 'cursorline' causes virtual text highlight to continue
+    
+    Problem:    'cursorline' causes virtual text highlight to continue.
+    Solution:   Save and restore line_attr. (closes #11588)
+
+commit 02edfaa610a2bedd6e2a58a1ee64488d51cfc33d
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Fri Nov 18 23:13:47 2022 +0000
+
+    patch 9.0.0905: virtual text after the line wraps when 'wrap' is off
+    
+    Problem:    Virtual text after the line wraps when 'wrap' is off.
+    Solution:   Only set text_prop_follows when wrapping. (closes #11463)
+
+commit ee28c707e474682151554499874fc7bfb53360cb
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Thu Nov 17 14:56:00 2022 +0000
+
+    patch 9.0.0894: virtual text property highlight ignores window background
+    
+    Problem:    Virtual text property highlight ignores window background.
+    Solution:   Combine text prop attribute with win_attr into extra_attr.
+                (closes #11462)
+
+commit fc1b2d0961ad963e6337c25efe082f4c526aca5e
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Nov 16 22:12:57 2022 +0000
+
+    patch 9.0.0891: virtual text below after match has wrong highlight
+    
+    Problem:    Virtual text below after match has wrong highlight.
+    Solution:   Restore search_attr only after the virtual text.
+                (closes #11446)
+
+commit 7e017461e21ac534f8a0d59c1165d11358c69d87
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Oct 11 21:02:09 2022 +0100
+
+    patch 9.0.0725: virtual text "after" wraps to next line when 'wrap' is off
+    
+    Problem:    Virtual text "after" wraps to next line even when 'wrap' is off
+                and 'list' is set.
+    Solution:   Do not use the minimum width when 'wrap' is off. (issue #11336)
+
+commit a9a364872e41932990aba1787af65f67c7e14917
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Oct 11 16:47:22 2022 +0100
+
+    patch 9.0.0723: extra empty line below virtual text when 'list' is set
+    
+    Problem:    Extra empty line below virtual text when 'list' is set.
+    Solution:   Do not reset lcs_eol_one but set text_prop_follows. (closes #11339)
+
+commit 877151b3d8f6dacca56ce8e7f20fa5b27142d782
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Oct 11 15:29:50 2022 +0100
+
+    patch 9.0.0722: virtual text "after" does not show with 'list' set
+    
+    Problem:    Virtual text "after" does not show with 'list' set.
+    Solution:   Do not break out of the loop when another text prop follows.
+                (closes #11337)
+
+commit 9466fb8001227a4bc9045e91045426bc40680366
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Oct 11 14:54:42 2022 +0100
+
+    patch 9.0.0721: virtual text "above" with padding not displayed correctly
+    
+    Problem:    Virtual text "above" with padding not displayed correctly.
+    Solution:   Take padding into account when truncating. (closes #11340)
+
+commit ccf2837a05cef0ea4913ebff4f2f6000bc050271
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Oct 10 21:10:03 2022 +0100
+
+    patch 9.0.0718: extra empty line between two virtual text "below"
+    
+    Problem:    Extra empty line between two virtual text "below" when 'wrap' and
+                'number' are set.
+    Solution:   Reset "before" when there is no text in the screen line.
+                (closes #11334)
+
+commit cd105417a53fcf97c0935f3468201ef11516c9f1
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Oct 10 19:50:42 2022 +0100
+
+    patch 9.0.0716: with 'nowrap' virtual text "after" does not scroll left
+    
+    Problem:    With 'nowrap' virtual text "after" does not scroll left.
+    Solution:   Skip part of the virtual text that is left of the window.
+                (closes #11320)  Fix going beyond the last column of the window.
+
+commit 1206c163dbc8caace86e53f375f298af6cfab75a
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Oct 10 15:40:04 2022 +0100
+
+    patch 9.0.0714: with 'nowrap' two virtual text below not displayed correctly
+    
+    Problem:    With 'nowrap' two virtual text below not displayed correctly.
+    Solution:   Set text_prop_follows before continuing.  Correct for number
+                column. (closes #11333)
+
+commit f167c7b42476f8ab5b32c3c5ccbdca914316e96b
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Oct 9 21:53:58 2022 +0100
+
+    patch 9.0.0709: virtual text "after" not correct with 'nowrap'
+    
+    Problem:    Virtual text "after" not correct with 'nowrap'.
+    Solution:   Do not display "after" text prop on the next line when 'wrap' is
+                off.
+
+commit 13845c48d8ca96e0fa5bb237db519dd00045742f
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Oct 9 15:26:03 2022 +0100
+
+    patch 9.0.0705: virtual text truncation does not take padding into account
+    
+    Problem:    Virtual text truncation does not take padding into account.
+    Solution:   Subtract the padding from the available space. (closes #11318)
+
+commit ec5e1483ebda577e0b7f638c485203cd0e479c47
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Sep 21 16:38:13 2022 +0100
+
+    patch 9.0.0534: line number is displayed at virtual text "above"
+    
+    Problem:    Line number is displayed at virtual text "above".
+    Solution:   Show the line number at the text line.
+
+commit b84d565c623c00ca40bb4c1269a6860f780dda09
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Sep 20 17:57:53 2022 +0100
+
+    patch 9.0.0518: virtual text highlight starts too early with 'nowrap'
+    
+    Problem:    Virtual text highlight starts too early with 'nowrap' and 'number'
+                set.
+    Solution:   Add the offset to the attribute skip count. (issue #11138)
+
+commit ccfaa075918639b57925b16902cad339ab39b18c
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Sep 20 16:15:30 2022 +0100
+
+    patch 9.0.0516: virtual text "above" highlights gap after it
+    
+    Problem:    Virtual text "above" highlights gap after it.
+    Solution:   Do not highlight the gap. (closes #11138)
+
+commit 2fdc9b541918237168ca05ac09eb4bb245e5c6c5
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Sep 20 15:59:22 2022 +0100
+
+    patch 9.0.0515: virtual text highlight starts too early when 'number' is set
+    
+    Problem:    Virtual text highlight starts too early when 'number' is set.
+    Solution:   Set column offset when wrapping. (issue #11138)
+
+commit fb593c5350e8fe23b608ded5a011cd7eefe73922
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Sep 17 18:57:36 2022 +0100
+
+    patch 9.0.0489: using "end_lnum" with virtual text causes problems
+    
+    Problem:    Using "end_lnum" with virtual text causes problems.
+    Solution:   Disallow using "end_lnum" with virtual text. (closes #11151)
+                Also disallow "end_col" and "length".
+
+commit 4c7fd4d68f69b4e420a5448f144f4d57eda22f8c
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Sep 17 17:15:33 2022 +0100
+
+    patch 9.0.0488: cursor wrong with virtual text "above" and 'showbreak'
+    
+    Problem:    Cursor in wrong position with virtual text "above" and
+                'showbreak'.
+    Solution:   Take the first character column into account. (closes #11149)
+
+commit e24b4aba1fbf782954897abdbfc084c4221428eb
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Fri Sep 16 20:51:14 2022 +0100
+
+    patch 9.0.0482: "g0" moves to wrong location with virtual text "above"
+    
+    Problem:    "g0" moves to wrong location with virtual text "above".
+    Solution:   Compensate for the extra columns. (closes #11141)  Also fix "g$"
+
+commit a4abe514ecd9b7a038feed89f48476809775c80f
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Thu Sep 15 19:44:09 2022 +0100
+
+    patch 9.0.0472: virtual text "below" doesn't show in list mode
+    
+    Problem:    Virtual text "below" doesn't show in list mode.
+    Solution:   Reset lcs_eol_one when displaying text property.
+
+commit ebd0e8bb853cb744b60bf4f57011c4379ae4aaed
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Sep 14 22:13:59 2022 +0100
+
+    patch 9.0.0466: virtual text wrong after adding line break after line
+    
+    Problem:    Virtual text wrong after adding line break after line.
+    Solution:   Pass an "eol" flag to where text properties are adjusted.
+                (closes #11131)
+
+commit 702bd6c7c61073c0907fd7608911aebee4acd337
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Sep 14 16:09:57 2022 +0100
+
+    patch 9.0.0464: with virtual text "above" indenting doesn't work well
+    
+    Problem:    With virtual text "above" indenting doesn't work well.
+    Solution:   Ignore text properties while adjusting indent. (issue #11084)
+
+commit 6eda17d881c9b2880ccb2a4d11951939a58f233d
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Sep 12 19:25:11 2022 +0100
+
+    patch 9.0.0452: Visual highlighting extends into virtual text prop
+    
+    Problem:    Visual highlighting extends into virtual text prop.
+    Solution:   Do not highlight what isn't actually selected.  Fix ordering of
+                stored text props.
+
+commit c9dc03fff5acf6fb91a923fb95006f9c2bca6141
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Sep 12 17:51:07 2022 +0100
+
+    patch 9.0.0451: virtual text "above" does not work with 'nowrap'
+    
+    Problem:    Virtual text "above" does not work with 'nowrap'.
+    Solution:   Do wrap the line after. (closes #11084)
+
+commit 79f8b8494cd4f738f25272ece94d8b524b99cb09
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Sep 11 13:31:01 2022 +0100
+
+    patch 9.0.0442: virtual text "above" doesn't handel line numbers
+    
+    Problem:    Virtual text "above" doesn't handel line numbers.
+    Solution:   Take the left column offset into account. (issue #11084)
+                Also make padding work.
+
+commit 88b79cb7d47e2e1fee1baf4016c50b861e6b21c4
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Sep 10 22:32:14 2022 +0100
+
+    patch 9.0.0439: cursor wrong if inserting before line with virtual text above
+    
+    Problem:    Cursor wrong if inserting before line with virtual text above.
+    Solution:   Add the width of the "above" virtual text to the cursor position.
+                (issue #11084)
+
+commit 04e0ed1ddf399d609dbcb7dbf19e531da1fe6172
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Sep 10 20:00:56 2022 +0100
+
+    patch 9.0.0438: cannot put virtual text above a line
+    
+    Problem:    Cannot put virtual text above a line.
+    Solution:   Add the "above" value for "text_align".
+
+commit c8bf59e9b27f9d621818ffc61468abef45cedf37
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Aug 28 16:39:22 2022 +0100
+
+    patch 9.0.0297: cursor position wrong after right aligned virtual text
+    
+    Problem:    Cursor position wrong after right aligned virtual text. (Iizuka
+                Masashi)
+    Solution:   Take the width of the column offset into account. (closes #10997)
+                Also fix virtual text positioning.
+
+commit f5240b96f721b08d703340ff0b2e67b79fb8b821
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Aug 24 12:24:37 2022 +0100
+
+    patch 9.0.0252: cursor in wrong place after virtual text
+    
+    Problem:    Cursor in wrong place after virtual text.
+    Solution:   Do not change the length of a virtual text property.
+                (closes #10964)
+
+commit f396ce83eebf6c61596184231d39ce4d41eeac04
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Tue Aug 23 18:39:37 2022 +0100
+
+    patch 9.0.0247: cannot add padding to virtual text without highlight
+    
+    Problem:    Cannot add padding to virtual text without highlight.
+    Solution:   Add the "text_padding_left" argument. (issue #10906)
+
+commit d8d4cfcb393123fa19640be0806091d47935407f
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Mon Aug 15 15:55:10 2022 +0100
+
+    patch 9.0.0214: splitting a line may duplicate virtual text
+    
+    Problem:    Splitting a line may duplicate virtual text. (Ben Jackson)
+    Solution:   Don't duplicate a text property with virtual text. Make
+                auto-indenting work better. (closes #10919)
+
+commit c3a483fc3c65f649f9985bb88792a465ea18b0a2
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Aug 14 19:37:36 2022 +0100
+
+    patch 9.0.0210: 'list' mode does not work properly with virtual text
+    
+    Problem:    'list' mode does not work properly with virtual text.
+    Solution:   Show the "$" at the right position. (closes #10913)
+
+commit 9e7e28fc4c32337f2153b94fb08140f47e46e35d
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Aug 14 16:36:38 2022 +0100
+
+    patch 9.0.0208: the override flag has no effect for virtual text
+    
+    Problem:    The override flag has no effect for virtual text. (Ben Jackson)
+    Solution:   Make the override flag work. (closes #10915)
+
+commit 28c9f895716cfa8f1220bc41b72a534c0e10cabe
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sun Aug 14 13:28:55 2022 +0100
+
+    patch 9.0.0205: cursor in wrong position when inserting after virtual text
+    
+    Problem:    Cursor in wrong position when inserting after virtual text. (Ben
+                Jackson)
+    Solution:   Put the cursor after the virtual text, where the text will be
+                inserted. (closes #10914)
+
+commit 9113c2cd19c72c0973ee5dc095a0a7f03f2af344
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Aug 13 20:17:34 2022 +0100
+
+    patch 9.0.0201: CursorLine highlight overrules virtual text highlight
+    
+    Problem:    CursorLine highlight overrules virtual text highlight.
+    Solution:   Let extra attribute overrule line attribute. (closes #10909)
+
+commit f0ccfa474a5c4940d03bfc6084e896dc8ac2d791
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Sat Aug 13 16:41:19 2022 +0100
+
+    patch 9.0.0199: cursor position wrong with two right-aligned virtual texts
+    
+    Problem:    Cursor position wrong with two right-aligned virtual texts.
+    Solution:   Add the padding for right-alignment. (issue #10906)
+
+commit e38fc86180fd3f6b372648eea6adc3f623fea302
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Thu Aug 11 17:24:50 2022 +0100
+
+    patch 9.0.0193: search and match highlgith interfere with virtual text
+    
+    Problem:    Search and match highlgith interfere with virtual text highlight.
+                (Ben Jackson)
+    Solution:   Check for match highlight after text properties.  Reset and
+                restore search highlight when showing virtual text.
+                (closes #10892)
+
+commit 82b14c143aa1e70d55509cc9fa408828e90c93de
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Aug 10 19:50:47 2022 +0100
+
+    patch 9.0.0188: strange effects when using "text_align" with non-zero column
+    
+    Problem:    Strange effects when using virtual text with "text_align" and
+                non-zero column. (Martin Tournoij)
+    Solution:   Give an error. (closes #10888)
+
+commit 3331dd03515655ec6b9c1bd374db6e8c27acb27a
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Aug 10 16:49:02 2022 +0100
+
+    patch 9.0.0186: virtual text without highlighting does not show
+    
+    Problem:    Virtual text without highlighting does not show. (Ben Jackson)
+    Solution:   Use a text property when it has highlighting or when it has text.
+                (closes #10878)
+
+commit 952c9b02f8a7c2386b66ed643eef0acd35e842ae
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Aug 10 16:00:33 2022 +0100
+
+    patch 9.0.0185: virtual text does not show if text prop at same position
+    
+    Problem:    Virtual text does not show if tehre is a text prop at same
+                position. (Ben Jackson)
+    Solution:   Fix the sorting of properties. (closes #10879)
+
+commit 1d8844aa59416dd306912b5563b8e928dfd387ba
+Author: Bram Moolenaar <Bram@vim.org>
+Date:   Wed Aug 10 13:39:35 2022 +0100
+
+    patch 9.0.0184: virtual text prop highlight continues after truncation
+    
+    Problem:    Virtual text prop highlight continues after truncation.
+    Solution:   Recompute the length of attributes.
