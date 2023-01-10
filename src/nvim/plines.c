@@ -389,6 +389,7 @@ int win_lbr_chartabsize(chartabsize_T *cts, int *headp)
   int size = win_chartabsize(wp, (char *)s, vcol);
   if (cts->cts_has_virt_text && *line != NUL) {
     int col = (int)((char *)s - line);
+    int tab_size = size;
     while (true) {
       mtkey_t mark = marktree_itr_current(cts->cts_iter);
       if (mark.pos.row != cts->cts_row || mark.pos.col > col) {
@@ -399,6 +400,11 @@ int win_lbr_chartabsize(chartabsize_T *cts, int *headp)
           if (decor.virt_text_pos == kVTInline) {
             cts->cts_cur_text_width = decor.virt_text_width;
             size += cts->cts_cur_text_width;
+            if (*s == TAB) {
+              size -= tab_size;
+              tab_size = win_chartabsize(wp, s, vcol + size);
+              size += tab_size;
+            }
           }
         }
 

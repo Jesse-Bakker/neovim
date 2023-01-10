@@ -1214,6 +1214,205 @@ end]]
                                                         |
     ]] }
     end)
+    it('positions the cursor correctly with virtual text before Tab', function ()
+        for _ = 1, 6 do
+            meths.buf_set_lines(0, 0, 0, true, {'x\ty'})
+        end
+        meths.buf_set_extmark(0, ns, 0, 1, {
+            virt_text = { {'123', 'Special'}}, virt_text_pos= 'inline' })
+        meths.buf_set_extmark(0, ns, 1, 1, {
+            virt_text = { {'1234567', 'Special'}}, virt_text_pos= 'inline' })
+        meths.buf_set_extmark(0, ns, 2, 1, {
+            virt_text = { {'12345678', 'Special'}}, virt_text_pos= 'inline' })
+        meths.buf_set_extmark(0, ns, 3, 1, {
+            virt_text = { {'123456789', 'Special'}}, virt_text_pos= 'inline' })
+        meths.buf_set_extmark(0, ns, 4, 2, {
+            virt_text = { {'ABC', 'Special'}}, virt_text_pos= 'inline' })
+        meths.buf_set_extmark(0, ns, 5, 3, {
+            virt_text = { {'ABC', 'Special'}}, virt_text_pos= 'inline' })
+        feed 'gg0'
+        screen:expect { grid = [[
+      ^x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed '$'
+        screen:expect { grid = [[
+      x{28:123}    ^y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed 'j0'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      ^x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed '$'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        ^y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed 'j0'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      ^x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+
+        feed '$'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       ^y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed 'j0'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      ^x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+
+        feed '$'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      ^y                                 |
+      x       {28:ABC}y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed 'j'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}^y                                      |
+      x       y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed 'j'
+        screen:expect { grid = [[
+      x{28:123}    y                                         |
+      x{28:1234567}        y                                 |
+      x{28:12345678}       y                                 |
+      x{28:123456789}      y                                 |
+      x       {28:ABC}y                                      |
+      x       ^y{28:ABC}                                      |
+                                                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+    end)
 end)
 
 describe('decorations: virtual lines', function()
