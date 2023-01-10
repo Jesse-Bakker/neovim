@@ -1171,6 +1171,49 @@ end]]
                                                         |
     ]] }
     end)
+    it('positions the cursor between two inline virtual text extmarks', function ()
+        insert "local a, b = 1, 2"
+        meths.buf_set_extmark(0, ns, 0, 13, {
+            virt_text = { {'a: ', 'Special'}}, virt_text_pos= 'inline' })
+        meths.buf_set_extmark(0, ns, 0, 16, {
+            virt_text = { {'b: ', 'Special'}}, virt_text_pos= 'inline' })
+        feed '0f1'
+        screen:expect { grid = [[
+      local a, b = {28:a: }^1, {28:b: }2                           |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        feed 'f2'
+        screen:expect { grid = [[
+      local a, b = {28:a: }1, {28:b: }^2                           |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+    end)
 end)
 
 describe('decorations: virtual lines', function()
