@@ -1413,6 +1413,48 @@ end]]
                                                         |
     ]] }
     end)
+        it('does not add extra space after inline virtual text with linebreak set', function()
+            insert 'one twoword'
+            meths.buf_set_extmark(0, ns, 0, 3, {
+                virt_text = { { ': virtual text', 'Special' } },
+                virt_text_pos = 'inline',
+            })
+            exec 'set linebreak'
+            feed 'gg0'
+        screen:expect { grid = [[
+      one{28:: virtual text} twoword                        |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+            insert 'asdf asdf asdf as'
+        screen:expect { grid = [[
+      asdf asdf asdf a^sone{28:: virtual text}              |
+      twoword                                             |
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+      {1:~                                                 }|
+                                                        |
+    ]] }
+        end)
 end)
 
 describe('decorations: virtual lines', function()
