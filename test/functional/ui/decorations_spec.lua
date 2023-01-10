@@ -1422,7 +1422,8 @@ end]]
             exec 'set linebreak'
             feed 'gg0'
         screen:expect { grid = [[
-      one{28:: virtual text} twoword                        |
+      ^one{28:: virtual text} twoword                         |
+      {1:~                                                 }|
       {1:~                                                 }|
       {1:~                                                 }|
       {1:~                                                 }|
@@ -1437,10 +1438,11 @@ end]]
       {1:~                                                 }|
                                                         |
     ]] }
-            insert 'asdf asdf asdf as'
+            insert 'asdf asdf asdf asdf asdf as'
         screen:expect { grid = [[
-      asdf asdf asdf a^sone{28:: virtual text}              |
-      twoword                                             |
+      asdf asdf asdf asdf asdf a^sone{28:: virtual text}      |
+      twoword                                           |
+      {1:~                                                 }|
       {1:~                                                 }|
       {1:~                                                 }|
       {1:~                                                 }|

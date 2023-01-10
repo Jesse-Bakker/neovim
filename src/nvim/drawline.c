@@ -1996,6 +1996,8 @@ int win_line(win_T *wp, linenr_T lnum, int startrow, int endrow, bool nochange, 
           chartabsize_T cts;
 
           init_chartabsize_arg(&cts, wp, lnum, (colnr_T)vcol, line, p);
+          cts.cts_has_virt_text = false;
+          clear_chartabsize_arg(&cts);
           n_extra = win_lbr_chartabsize(&cts, NULL) - 1;
 
           // We have just drawn the showbreak value, no need to add
